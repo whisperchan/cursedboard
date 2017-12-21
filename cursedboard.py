@@ -807,5 +807,10 @@ class TestApp(npyscreen.NPSAppManaged):
 
 
 if __name__ == "__main__":
-        App = TestApp()
-        App.run()
+        try:
+            App = TestApp()
+            App.run()
+        except npyscreen.wgwidget.NotEnoughSpaceForWidget:
+            print("Please increase the size of your terminal and reconnect")
+        except KeyboardInterrupt:
+            print("Good bye")
