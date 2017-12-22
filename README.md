@@ -16,5 +16,6 @@ Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages
 3. Create a dedicated unix user
 4. Copy config.py-sample to config.py and adjust settings
 5. Point the shell of the user in /etc/passwd to the cursedboard
-6. ???
-7. Comfy Posting 
+6. Touch .hushlogin in the user directory to avoid an IP leak
+7. ???
+8. Comfy Posting 
