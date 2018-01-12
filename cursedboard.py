@@ -645,14 +645,21 @@ class Board(npyscreen.MultiLineAction):
 
     def update(self, clear=True):
         super(Board, self).update(clear)
+
+
+        label = "Thread %s/%s " % (self.cursor_line+1, len(self.values))
+        self.parent.curses_pad.addstr(self.rely+self.height-1, self.relx, label, self.parent.theme_manager.findPair(self, 'CONTROL'))
+
+
         index = self.start_display_at + len(self._my_widgets)
-        lines = self.height - ( len(self._my_widgets)*self._contained_widget_height)
-        if index >= len(self.values) or len(self._my_widgets) >= len(self.values) :
+        lines = self.height - ( len(self._my_widgets)*self._contained_widget_height)-1
+
+        if index >= len(self.values) or len(self._my_widgets) >= len(self.values):
             return
 
         line_values = self.display_value(self.values[index])
         for i in range(0, min(lines, len(line_values))):
-            self.parent.curses_pad.addstr(len(self._my_widgets)*self._contained_widget_height+i,
+            self.parent.curses_pad.addstr(len(self._my_widgets)*self._contained_widget_height+i+1,
                                             1,
                                             line_values[i],
                                             0)
