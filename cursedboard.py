@@ -602,6 +602,9 @@ class BoardThread(npyscreen.Pager):
 class Board(npyscreen.MultiLineAction):
     _contained_widgets = BoardThread
     _contained_widget_height = THREAD_PREVIEW_HEIGHT
+    def __init__(self, *args, **keywords):
+        super(Board, self).__init__(*args, **keywords)
+        self.slow_scroll = True
 
     def display_value(self, value):
         first = value['first']
@@ -621,7 +624,7 @@ class Board(npyscreen.MultiLineAction):
         text += "│\n" * (3 - len(blocks))
 
         if first['pid'] == last['pid']:
-            text += "│ No Replies \n│\n│\n│\n│\n│\n"
+            text += "│ No Replies \n│\n│\n│\n│\n"
             return text.split("\n")
 
         text += "│ %s Posts hidden\n" % (value['posts'] - 2)
@@ -640,6 +643,20 @@ class Board(npyscreen.MultiLineAction):
 
         return text.split("\n")
 
+    def update(self, clear=True):
+        super(Board, self).update(clear)
+        index = self.start_display_at + len(self._my_widgets)
+        lines = self.height - ( len(self._my_widgets)*self._contained_widget_height)
+        if index >= len(self.values) or len(self._my_widgets) >= len(self.values) :
+            return
+
+        line_values = self.display_value(self.values[index])
+        for i in range(0, min(lines, len(line_values))):
+            self.parent.curses_pad.addstr(len(self._my_widgets)*self._contained_widget_height+i,
+                                            1,
+                                            line_values[i],
+                                            0)
+
     def _set_line_values(self, line, value_indexer):
         try:
             _vl = self.values[value_indexer]
@@ -655,6 +672,7 @@ class Board(npyscreen.MultiLineAction):
     def actionHighlighted(self, value, keypress):
         self.parent.parentApp.myThreadId = value['first']['pid']
         self.parent.parentApp.switchForm('THREAD')
+
 
 
 class BoardView(npyscreen.FormMuttActiveTraditional):
