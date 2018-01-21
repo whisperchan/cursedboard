@@ -17,5 +17,6 @@ Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages
 4. Copy config.py-sample to config.py and adjust settings
 5. Touch .hushlogin in the user directory to avoid an IP leak
 6. Disable TCP Forwarding for the user in sshd\_config 
-7. ???
-8. Comfy Posting 
+7. Disable the sftp Subsystem or make sure its not set to internal-sftp in sshd\_config
+8. ???
+9. Comfy Posting 
