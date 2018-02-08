@@ -756,6 +756,24 @@ class MaxMultiLineEdit(npyscreen.MultiLineEdit):
         self.max_lines = int(keywords['max_lines'])
 
         super(MaxMultiLineEdit, self).__init__(*args, **keywords)
+        self.handlers.update({
+                curses.KEY_END: self.h_end,
+                curses.KEY_HOME: self.h_home})
+
+
+    def h_home(self, inp):
+        index = self.cursor_position -1 
+        while(index > 0):
+            if self.value[index] == "\n":
+                index += 1
+                break
+            index -= 1
+        self.cursor_position = index
+
+    def h_end(self, inp):
+        self.cursor_position = self.value.find('\n', self.cursor_position)
+        if self.cursor_position == -1:
+            self.cursor_position = len(self.value)
 
     def h_addch(self, inp):
         if len(self.value) < self.max_length and self.value.count('\n') < self.max_lines:
