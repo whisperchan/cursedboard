@@ -780,6 +780,16 @@ class MaxMultiLineEdit(npyscreen.MultiLineEdit):
             return super(MaxMultiLineEdit, self).h_addch(inp)
         return
 
+    def h_delete_right(self, inp):
+        super(MaxMultiLineEdit, self).h_delete_right(inp)
+        self.reformat_preserve_nl()
+        return
+
+    def h_delete_left(self, inp):
+        super(MaxMultiLineEdit, self).h_delete_left(inp)
+        self.reformat_preserve_nl()
+        return
+
     def reformat_preserve_nl(self, *ignorethese):
         width = self.maximum_display_width
         text  = self.value
