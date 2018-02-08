@@ -286,8 +286,8 @@ class ActionController(npyscreen.ActionControllerSimple):
         self.parent.parentApp.switchForm("MAIN")
 
     def auth(self, *args):
-        if args is None or len(args) < 1:
-            self.parent.wStatus2.value = "admin auth <password>"
+        if args is None or len(args) < 2:
+            self.parent.wStatus2.value = "auth <password>"
             return
 
         self.parent.parentApp.authenticate(args[1])
