@@ -762,6 +762,43 @@ class MaxMultiLineEdit(npyscreen.MultiLineEdit):
             return super(MaxMultiLineEdit, self).h_addch(inp)
         return
 
+    def reformat_preserve_nl(self, *ignorethese):
+        width = self.maximum_display_width
+        text  = self.value
+        lines = []
+        overflow = []
+        for former_line in text.split('\n'):
+            line = []
+            len_line = 0
+
+            if len(overflow) > 0:
+                actual_line = ' '.join(overflow) + ' '  + former_line 
+                overflow = []
+            else:
+                actual_line = former_line
+
+            for word in actual_line.split(' '):
+                len_word = len(word)
+                if len_line + len_word <= width:
+                    line.append(word)
+                    len_line += len_word + 1
+                else:
+                    #Once we had an overflow we stay overflowing
+                    len_line += width
+                    overflow.append(word)
+
+            overflow.reverse()
+            lines.append(' '.join(line))
+            #Overlow pushed into a new line
+            if former_line == "" and len(line) > 1:
+                lines.append('')
+
+        if len(overflow) > 0:
+           lines.append(' '.join(overflow)) 
+
+
+        self.value = '\n'.join(lines)
+        return self.value
 
 class BoxedMaxMultiLineEdit(npyscreen.BoxTitle):
     _contained_widget = MaxMultiLineEdit
