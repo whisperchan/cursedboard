@@ -4,6 +4,8 @@ import curses
 import re
 import textwrap
 import os
+import glob
+import random
 
 from datetime import datetime
 
@@ -659,7 +661,7 @@ class Board(npyscreen.MultiLineAction):
 
         line_values = self.display_value(self.values[index])
         for i in range(0, min(lines, len(line_values))):
-            self.parent.curses_pad.addstr(len(self._my_widgets)*self._contained_widget_height+i+1,
+            self.parent.curses_pad.addstr(len(self._my_widgets)*self._contained_widget_height+i+self.rely,
                                             1,
                                             line_values[i],
                                             0)
@@ -685,11 +687,17 @@ class Board(npyscreen.MultiLineAction):
 class BoardView(npyscreen.FormMuttActiveTraditional):
     ACTION_CONTROLLER = ActionController
     MAIN_WIDGET_CLASS = Board
+    MAIN_WIDGET_CLASS_START_LINE = 14
 
     def create(self, *args, **keywords):
         MAXY = self.lines
         self.wStatus1 = self.add(self.__class__.STATUS_WIDGET_CLASS,
-                                 rely=self.__class__.MAIN_WIDGET_CLASS_START_LINE - 1,
+                                 rely=0,
+                                 relx=self.__class__.STATUS_WIDGET_X_OFFSET,
+                                 editable=False)
+        self.wBanner= self.add(npyscreen.Pager,
+                                height = 13,
+                                 rely=self.__class__.MAIN_WIDGET_CLASS_START_LINE - 13,
                                  relx=self.__class__.STATUS_WIDGET_X_OFFSET,
                                  editable=False)
 
@@ -723,6 +731,27 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
         self.parentApp.myThreadContent = ""
 
         self.stats_update()
+        self.banner_update()
+
+    def get_banner(self):
+        base_dir = os.path.dirname(os.path.realpath(__file__))
+        banners = glob.glob(base_dir+"/banners/%s-*.txt" %(self.parentApp.myBoardId))
+        if not banners:
+            banners = [base_dir+"/banners/default.txt"]
+
+        return open(random.choice(banners), "r").readlines()
+     
+
+    def banner_update(self): 
+        banner = self.get_banner()
+        # Center the banner
+        pad = int((self.columns-len(max(banner, key=len)))/2)
+        if pad < 0:
+            pad = 0
+        for i in range(0, len(banner)):
+            banner[i] = " "*pad + banner[i]
+
+        self.wBanner.values = banner
 
     def stats_update(self):
         self.wStatus2.value = "%s Bits conntected at tick %s " % (
@@ -730,6 +759,7 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
 
     def while_waiting(self):
         self.stats_update()
+        self.banner_update()
         self.wMain.values = self.parentApp.myDatabase.get_threads(
             self.parentApp.myBoardId)
         self.display()
