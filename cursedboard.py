@@ -845,7 +845,6 @@ class MaxMultiLineEdit(npyscreen.MultiLineEdit):
                     len_line += width
                     overflow.append(word)
 
-            overflow.reverse()
             lines.append(' '.join(line))
             #Overlow pushed into a new line
             if former_line == "" and len(line) > 1:
