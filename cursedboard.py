@@ -368,6 +368,15 @@ class ActionController(npyscreen.ActionControllerSimple):
 
 
 class BoardList(npyscreen.MultiLineAction):
+    def __init__(self, *args, **keywords):
+        super(BoardList, self).__init__(*args, **keywords)
+
+        del self.handlers[curses.KEY_LEFT]
+
+        self.handlers.update({
+            curses.KEY_RIGHT: self.h_act_on_highlighted,
+        })
+
     def display_value(self, value):
         return "%s %s ticked %s" % (padr("/%s/" % (value[1]), 10), padr(value[2], 40), prettydate(value[3]))
 
@@ -444,6 +453,11 @@ class ThreadLine(npyscreen.Textfield):
 
 class ThreadPager(npyscreen.Pager):
     _contained_widgets = ThreadLine
+    def __init__(self, *args, **keywords):
+        super(ThreadPager, self).__init__(*args, **keywords)
+        self.handlers.update({
+            curses.KEY_LEFT: self.parent.action_controller.current_board,
+        })
 
 
 class ThreadView(npyscreen.FormMuttActiveTraditional):
@@ -589,7 +603,6 @@ class BoardThreadLine(npyscreen.Textfield):
 
 class BoardThread(npyscreen.Pager):
     _contained_widgets = BoardThreadLine
-
     def update(self, clear=True):
         for w in self._my_widgets:
             w.my_selected = self.highlight
@@ -607,6 +620,10 @@ class Board(npyscreen.MultiLineAction):
     def __init__(self, *args, **keywords):
         super(Board, self).__init__(*args, **keywords)
         self.slow_scroll = True
+        self.handlers.update({
+            curses.KEY_RIGHT: self.h_act_on_highlighted,
+            curses.KEY_LEFT: self.parent.action_controller.list,
+        })
 
     def display_value(self, value):
         first = value['first']
