@@ -64,6 +64,13 @@ Keeping a board or thread open will refresh on new posts.
 /meta/         for all your nagging needs.
 
 """
+def option_binary(args):
+    if (args in ['on', '1', 'On']):
+        return 1
+    if (args in ['off', '0', 'Off']):
+        return 0
+
+    return None
 
 
 def blockify(text, width, count):
@@ -305,7 +312,16 @@ class ActionController(npyscreen.ActionControllerSimple):
             return
 
         name = args[0]
-        country_balls = args[1]
+        exists = self.parent.parentApp.myDatabase.name_to_bid(name)
+        if exists:
+            self.parent.wStatus2.value = "Board already exists: %s" %(name,)
+            return
+
+        country_balls = option_binary(args[1])
+        if not country_balls:
+            self.parent.wStatus2.value = "Countryball Value: Off off 0 On on 1"
+            return
+
         description = " ".join(args[2:])
         self.parent.parentApp.myDatabase.create_board(
             name, description, country_balls)
