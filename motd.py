@@ -31,8 +31,8 @@ MMMM  O  :h for |||| help    O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MM
 ----------------'||`-------------------'||`-------------------'||`-------------------'||`-------------------'|
 =============I===´`=====================´`=====================´`=====================´`=====================´
              |
-             |        we're the bits that quitely exchange in the bustling flow around the globe
-~~~~~~~~~~~~~´
+             |           we're the bits that quitely exchange in the bustling flow around the globe
+~~~~~~~~~~~~~´             NEWS: sftp bit@whisper.onthewifi.com 10MB Limit simple ASCII filenames
 """
 
 line_state = 0
@@ -82,6 +82,11 @@ class MotdTextfield(npyscreen.Textfield):
             if value.find("=============I") > -1:
                 line_state = (line_state + 1) % 18
 
+        regex = re.compile("NEWS:")
+        for group in regex.finditer(value):
+            position = group.span()
+            for i in range(position[0], position[1]):
+                color[i] = random.choice([yellow, cyan, green, red])
 
         regex = re.compile(":h for")
         for group in regex.finditer(value):
