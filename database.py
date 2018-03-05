@@ -76,9 +76,9 @@ class Database(object):
         result = []
         for t in threads:
             record = {'posts':t['posts']}
-            c.execute("SELECT pid, title, name, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created ASC LIMIT 1" % (boardid,), (t['tid'],))
+            c.execute("SELECT pid, tid, title, name, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created ASC LIMIT 1" % (boardid,), (t['tid'],))
             record['first'] = c.fetchone()
-            c.execute("SELECT pid, title, name, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created DESC LIMIT 1" % (boardid,), (t['tid'],))
+            c.execute("SELECT pid, tid, title, name, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created DESC LIMIT 1" % (boardid,), (t['tid'],))
             record['last'] = c.fetchone()
             result.append(record)
 

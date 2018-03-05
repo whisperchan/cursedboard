@@ -716,7 +716,7 @@ class Board(npyscreen.MultiLineAction):
         line.hidden = False
 
     def actionHighlighted(self, value, keypress):
-        self.parent.parentApp.myThreadId = value['first']['pid']
+        self.parent.parentApp.myThreadId = value['first']['tid']
         self.parent.parentApp.switchForm('THREAD')
 
 
