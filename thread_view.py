@@ -80,8 +80,14 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
             text += "│ No. %s " % (padl(thread['pid'], MAX_POSTID_LENGTH))
             text += " %s  %s " % (padr(thread['title'], MAX_CHARS_TITLE),
                                   padr(thread['name'], MAX_CHARS_NAME))
-            text += "  %s %s\n│\n" % (thread['created'], thread['country'])
+            text += "  %s %s\n" % (thread['created'], thread['country'])
 
+            if SFTP_INTEGRATION:
+                files = self.get_files_for_post(thread['pid'], thread['tid'])
+                if len(files):
+                    for line in blockify(" ".join(files), self.wMain.width, 5):
+                        text += "│ Attached: {}\n".format(line)
+            text += "│\n"
             lines = 0
             for line in thread['content'].split("\n"):
                 text += "│ " + line + "\n"
@@ -93,3 +99,11 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
             text += "\n"
 
         self.wMain.values = text.split("\n")
+
+    def get_files_for_post(self, pid, tid):
+        thread_path = get_local_path(self.parentApp.myDatabase, self.parentApp.myBoardId, tid)
+        if not os.path.isdir(thread_path):
+            return []
+
+        files = os.listdir(thread_path)
+        return [name for name in files if re.match("{}_.*".format(pid), name)] 

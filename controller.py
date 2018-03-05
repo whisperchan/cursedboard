@@ -6,6 +6,12 @@ HELP_TEXT = """
 Navigate with arrow keys, j, k and <tab>. Confirm with enter or space. Go back up with backspace.
 These vim style commands can be issued with : as prefix:
 
+For each post a corresponding directory on the sftp server is created. Files in the directory starting
+with 'postid_' are automatically associated with the matching post.
+
+The file browser is context aware, meaning backspace will open the view the browser was called in.
+
+The sftp server allows files up to 10MB and with the filename set 0-9a-Z_-.
 
 h, help      - This message
 rules        - Show info
@@ -16,6 +22,7 @@ p, post      - Open the post form on a board
 r, reply     - Open the reply form on a thread
 b, board     - Go back to a board from thread
 l, list      - Go back to overview
+f, files     - Opens the file browser context aware
 q, quit      - Jack out
 
 
@@ -56,6 +63,8 @@ class ActionController(npyscreen.ActionControllerSimple):
         self.add_action('^:.*', self.execute_command, False)
 
         self.CMD = {
+            'files': self.files,
+            'f': self.files,
             'p': self.post,
             'post': self.post,
             'r': self.reply,
@@ -215,3 +224,29 @@ class ActionController(npyscreen.ActionControllerSimple):
     def rules(self, *args):
         placard = RULES_TEXT
         cursed_notify(placard, title="House Rules")
+
+    def files(self, *args):
+        if not SFTP_INTEGRATION:
+            self.parent.wStatus2.value = "Files are not enabled"
+            return
+
+        path = SFTP_ROOT_DIR
+        if self.parent.parentApp.myBoardId != 0:
+            path = os.path.join(path, self.parent.parentApp.myDatabase.get_board(self.parent.parentApp.myBoardId)[0])
+            if self.parent.parentApp.myThreadId != 0:
+                path = os.path.join(path, str(self.parent.parentApp.myThreadId))
+        self.parent.parentApp.myPath = path
+        self.parent.parentApp.switchForm("FILES")
+
+    def thread_files(self, *args):
+        if not SFTP_INTEGRATION:
+            self.parent.wStatus2.value = "Files are not enabled"
+            return
+
+        if self.parent.parentApp._THISFORM.FORM_NAME != "THREAD":
+            self.parent.wStatus2.value = "Not in a thread"
+            return
+
+        placard = "sftp {}:{}".format(HOSTNAME, get_remote_path(self.parent.parentApp.myDatabase, self.parent.parentApp.myBoardId, self.parent.parentApp.myThreadId))
+        cursed_notify(placard, title="Upload to Thread")
+

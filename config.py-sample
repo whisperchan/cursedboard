@@ -9,3 +9,6 @@ ANON_NAME = "Bit"
 UNIX_USER = "whisper"
 DATABASE_FILE = "cursedboard.db"
 PASSWORD = "changeme"
+HOSTNAME = "example.net"
+SFTP_INTEGRATION = False
+SFTP_ROOT_DIR = "/var/sftp"

@@ -8,6 +8,7 @@ from thread_view import ThreadView
 from frontpage import Frontpage
 from board_view import BoardView
 from post_form import PostForm
+from file_browser import FileBrowser
 
 class TestApp(npyscreen.NPSAppManaged):
     def onStart(self):
@@ -17,10 +18,12 @@ class TestApp(npyscreen.NPSAppManaged):
         self.myThreadId = 0
         self.myThreadTitle = ""
         self.myThreadContent = ""
+        self.myPath = ""
         self.addForm("MAIN", Frontpage)
         self.addForm("BOARD", BoardView)
         self.addForm("POST", PostForm)
         self.addForm("THREAD", ThreadView)
+        self.addForm("FILES", FileBrowser)
         # Disable mouse, easier copy / paste
         curses.mousemask(0)
 

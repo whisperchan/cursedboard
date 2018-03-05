@@ -13,6 +13,12 @@ import npyscreen
 from config import *
 
 
+def get_local_path(database, boardid, threadid):
+    return os.path.join(SFTP_ROOT_DIR, database.get_board(boardid)[0], str(threadid))
+
+def get_remote_path(database, boardid, threadid):
+    return os.path.join("/", database.get_board(boardid)[0], str(threadid))
+
 def option_binary(args):
     if (args in ['on', '1', 'On']):
         return 1
@@ -105,6 +111,11 @@ def update_highlighting(self, start=None, end=None, clear=False):
         color += [cyan] * MAX_CHARS_NAME
         color += [normal] * 22
         color += [red] * 80
+    elif value[:10] == "│ Attached":
+        color = [normal, normal]
+        color += [yellow]*9
+        color += [normal | curses.A_BOLD]*(len(value)-11)
+
     else:
         if value[:3] == "│ >":
             color = [normal] * 2 + [green] * (len(value) - 2)
@@ -161,7 +172,7 @@ def _wrap_message_lines(message, line_length):
 
 
 def cursed_notify(message, title="Message", form_color='STANDOUT', editw=0,):
-    F = PopupBig(name=title, color=form_color)
+    F = PopupBig(name=title, color=form_color, wide=True)
     F.preserve_selected_widget = True
     mlw = F.add(PagerHighlight,)
     mlw_width = mlw.width - 1

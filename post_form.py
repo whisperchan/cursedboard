@@ -148,8 +148,14 @@ class PostForm(npyscreen.ActionPopup):
                 ip = ip.split(" ")[0]
                 country = gi.country_name_by_addr(ip)
 
-        self.parentApp.myDatabase.post(self.parentApp.myBoardId, self.parentApp.myThreadId,
-                                       self.wgName.value, self.wgTitle.value, self.wgContent.value, country)
+        threadid = self.parentApp.myDatabase.post(self.parentApp.myBoardId, self.parentApp.myThreadId,
+                                       self.wgName.value, self.wgTitle.value, self.wgContent.value, country) 
+
+        if SFTP_INTEGRATION:
+            thread_path = get_local_path(self.parentApp.myDatabase, self.parentApp.myBoardId, threadid)
+            if not os.path.isdir(thread_path):
+                os.makedirs(thread_path)
+
         self.parentApp.switchFormPrevious()
 
     def on_cancel(self):

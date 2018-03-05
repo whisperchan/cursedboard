@@ -87,7 +87,7 @@ class Database(object):
     def get_thread(self, boardid, threadid):
         c = self.db.cursor()
         c.row_factory = sqlite3.Row
-        c.execute("SELECT pid, name, title, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created ASC" % (boardid,), (threadid,))
+        c.execute("SELECT pid, tid, name, title, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created ASC" % (boardid,), (threadid,))
         records = c.fetchall()
         c.close()
         return records
@@ -103,6 +103,7 @@ class Database(object):
         pid = c.lastrowid
         c.execute("UPDATE posts_%s SET tid = ? WHERE pid = ?" % boardid, (thread, pid))
         self.db.commit()
+        return thread
 
     def delete_post(self, boardid, postid):
         c = self.db.cursor()
