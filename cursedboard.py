@@ -286,6 +286,10 @@ class ActionController(npyscreen.ActionControllerSimple):
         cmd(*args[2:])
 
     def current_board(self, *args):
+        if self.parent.parentApp._THISFORM.FORM_NAME != "THREAD":
+            self.parent.wStatus2.value = "Not in a thread"
+            return
+
         self.parent.parentApp.myThreadId = 0
         self.parent.parentApp.switchForm("BOARD")
 
