@@ -1,4 +1,8 @@
 import sys
+import os
+import curses
+import npyscreen
+
 
 from img2txt import img2txt
 from img2txt import ansi
@@ -78,7 +82,7 @@ class ImagePager(npyscreen.DummyWidget):
         curses.reset_prog_mode()
 
     def set_up_handlers(self):
-        super(ImgPager, self).set_up_handlers()
+        super(ImagePager, self).set_up_handlers()
         self.handlers = {
                     curses.KEY_UP:      self.h_scroll_line_up,
                     curses.KEY_LEFT:    self.h_scroll_line_up,
