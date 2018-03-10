@@ -1,4 +1,6 @@
 import os
+import magic
+import sys
 
 import npyscreen
 import curses
@@ -6,6 +8,25 @@ import curses
 from config import *
 from utils import *
 from controller import ActionController
+
+
+class TextViewer(npyscreen.FormMuttActiveTraditional):
+    ACTION_CONTROLLER = ActionController
+    MAIN_WIDGET_CLASS = npyscreen.Pager
+    def __init__(self, *args, **keywords):
+        super(TextViewer, self).__init__(*args, **keywords)
+
+    def beforeEditing(self,):
+        self.add_handlers({
+            curses.KEY_BACKSPACE: self.parentApp.switchFormPrevious,
+        })
+
+        self.value = self.parentApp.myFile
+        if not os.path.isfile(self.value):
+            self.parentApp.switchFormPrevious()
+
+        with open(self.value,'r') as content:
+            self.wMain.values = content.readlines()
 
 class FileGrid(npyscreen.SimpleGrid):
     default_column_number = 1
@@ -42,8 +63,14 @@ class FileGrid(npyscreen.SimpleGrid):
         if os.path.isdir(select_file):
             self.change_dir(select_file)
         else:
-            self.h_exit_down(None)
-    
+            mime = magic.from_file(select_file, mime=True)
+            if mime == "text/plain":
+                self.parent.parentApp.myFile = select_file
+                self.parent.parentApp.switchForm("TEXTVIEWER")
+            elif mime == 'image/png' or mime == "image/jpeg":
+                self.parent.parentApp.myFile = select_file
+                self.parent.parentApp.switchForm("IMGVIEWER")
+
     def display_value(self, vl):
         p = os.path.split(vl)
         if p[1]:

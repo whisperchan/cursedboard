@@ -8,13 +8,14 @@ from thread_view import ThreadView
 from frontpage import Frontpage
 from board_view import BoardView
 from post_form import PostForm
-from file_browser import FileBrowser
+from file_browser import FileBrowser, TextViewer
+from image_viewer import ImageViewer
 
 class TestApp(npyscreen.NPSAppManaged):
     def onStart(self):
         self.admin = False
         self.myDatabase = Database(filename=DATABASE_FILE)
-        self.myBoardId = 1
+        self.myBoardId = 0
         self.myThreadId = 0
         self.myThreadTitle = ""
         self.myThreadContent = ""
@@ -24,6 +25,8 @@ class TestApp(npyscreen.NPSAppManaged):
         self.addForm("POST", PostForm)
         self.addForm("THREAD", ThreadView)
         self.addForm("FILES", FileBrowser)
+        self.addForm("TEXTVIEWER", TextViewer)
+        self.addForm("IMGVIEWER", ImageViewer)
         # Disable mouse, easier copy / paste
         curses.mousemask(0)
 
