@@ -44,6 +44,7 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
         threads = self.parentApp.myDatabase.get_thread(
             self.parentApp.myBoardId, self.parentApp.myThreadId)
         self.wMain.values = threads
+        self.wMain.reset_cursor()
         self.keypress_timeout = 80
 
         self.update_list()

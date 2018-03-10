@@ -103,6 +103,10 @@ class FileBrowser(npyscreen.FormMuttActiveTraditional):
             curses.KEY_BACKSPACE: self.parentApp.switchFormPrevious,
         })
 
+    def reset_cursor(self):
+        self.wMain.h_show_beginning('')
+
+
     def update_grid(self,):
         #if self.value:
         #    self.value = os.path.expanduser(self.value)
@@ -151,5 +155,5 @@ class FileBrowser(npyscreen.FormMuttActiveTraditional):
         file_list.sort(key=os.path.isdir, reverse=True)
         
         self.wMain.set_grid_values_from_flat_list(file_list, reset_cursor=False)
-                
+        
         self.display()

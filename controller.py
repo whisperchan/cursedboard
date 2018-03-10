@@ -236,6 +236,7 @@ class ActionController(npyscreen.ActionControllerSimple):
             if self.parent.parentApp.myThreadId != 0:
                 path = os.path.join(path, str(self.parent.parentApp.myThreadId))
         self.parent.parentApp.myPath = path
+        self.parent.parentApp.getForm("FILES").reset_cursor()
         self.parent.parentApp.switchForm("FILES")
 
     def thread_files(self, *args):
