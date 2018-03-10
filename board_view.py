@@ -243,8 +243,8 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
 
     def get_banner(self):
         base_dir = os.path.dirname(os.path.realpath(__file__))
-        banners = glob.glob(base_dir+"/banners/default-*.txt")
-        banners += glob.glob(base_dir+"/banners/%s-*.txt" %(self.parentApp.myBoardId))
+        banners = glob.glob(base_dir+"/banners/default-*.banner")
+        banners += glob.glob(base_dir+"/banners/%s-*.banner" %(self.parentApp.myBoardId))
 
         return open(random.choice(banners), "r").readlines()
      
