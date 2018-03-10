@@ -106,7 +106,9 @@ class FileBrowser(npyscreen.FormMuttActiveTraditional):
         self.sort_by_extension = False
 
     def beforeEditing(self,):
+        self.keypress_timeout = 80
         self.update_grid()
+        self.stats_update()
         self.add_handlers({
             curses.KEY_BACKSPACE: self.parentApp.switchFormPrevious,
         })
@@ -114,6 +116,14 @@ class FileBrowser(npyscreen.FormMuttActiveTraditional):
     def reset_cursor(self):
         self.wMain.h_show_beginning('')
 
+    def stats_update(self):
+        self.wStatus2.value = "%s Bits conntected at tick %s " % (
+            get_connected_users(), datetime.now())
+
+    def while_waiting(self):
+        self.stats_update()
+        self.update_grid()
+        self.display()
 
     def update_grid(self,):
         #if self.value:
@@ -135,7 +145,7 @@ class FileBrowser(npyscreen.FormMuttActiveTraditional):
             working_dir = os.path.dirname(self.value) + os.sep
             
         self.wStatus1.value = working_dir[len(os.path.abspath(SFTP_ROOT_DIR)):]
-        self.wStatus2.value = "sftp {}:{}".format(HOSTNAME,working_dir[len(os.path.abspath(SFTP_ROOT_DIR)):])
+        #self.wStatus2.value = "sftp {}:{}".format(HOSTNAME,working_dir[len(os.path.abspath(SFTP_ROOT_DIR)):])
 
         file_list = []
         if not os.path.abspath(SFTP_ROOT_DIR) == os.path.abspath(self.value):
