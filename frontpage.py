@@ -4,7 +4,7 @@ import curses
 from config import *
 from utils import *
 from motd import MotdPager, MOTD
-from controller import ActionController
+from controller import ActionController, HELP_TEXT
 
 class BoardList(npyscreen.MultiLineAction):
     def __init__(self, *args, **keywords):
