@@ -13,6 +13,14 @@ import npyscreen
 from config import *
 
 
+def directory_stats(path):
+    files = 0
+    directories = 0
+    for _, dirnames, filenames in os.walk(path):
+        files += len(filenames)
+        directories += len(dirnames)
+    return files, directories
+
 def get_local_path(database, boardid, threadid):
     return os.path.join(SFTP_ROOT_DIR, database.get_board(boardid)[0], str(threadid))
 

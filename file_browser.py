@@ -30,6 +30,10 @@ class TextViewer(npyscreen.FormMuttActiveTraditional):
 
 class FileGrid(npyscreen.SimpleGrid):
     default_column_number = 1
+
+    def __init__(self, *args, **keywords):
+        super(FileGrid, self).__init__(*args, **keywords)
+        self.select_whole_line = True
     
     def set_up_handlers(self):
         super(FileGrid, self).set_up_handlers()
@@ -73,18 +77,22 @@ class FileGrid(npyscreen.SimpleGrid):
 
     def display_value(self, vl):
         p = os.path.split(vl)
+        #File
         if p[1]:
             return p[1]
-        else:
+        #one up
+        elif vl == ".." + os.sep:
             return os.path.split(p[0])[1] + os.sep
-
-
-class Dir(FileGrid):
-    default_column_number = 1
+        #Subdirectory
+        else:
+            name = os.path.split(p[0])[1] + os.sep
+            padding = max(int(self.width/2) - len(name), 1)
+            f, d = directory_stats(vl)
+            return name + " "*padding + "{} files, {} directories".format(f,d)
 
 class FileBrowser(npyscreen.FormMuttActiveTraditional):
     ACTION_CONTROLLER = ActionController
-    MAIN_WIDGET_CLASS = Dir
+    MAIN_WIDGET_CLASS = FileGrid
 #    MAIN_WIDGET_CLASS_START_LINE = 30
 #    BLANK_LINES_BASE = 0
     def __init__(self, *args, **keywords):
