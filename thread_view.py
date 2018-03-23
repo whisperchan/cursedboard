@@ -38,13 +38,21 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
     MAIN_WIDGET_CLASS = ThreadPager
     ACTION_CONTROLLER = ActionController
 
+    def __init__(self, *args, **keywords):
+        super(ThreadView, self).__init__(*args, **keywords)
+        self.current_thread = 0
+
     def beforeEditing(self):
         self.wStatus1.value = "Thread View "
         self.wStatus2.value = ""
         threads = self.parentApp.myDatabase.get_thread(
             self.parentApp.myBoardId, self.parentApp.myThreadId)
         self.wMain.values = threads
-        self.wMain.reset_cursor()
+
+        if self.current_thread != self.parentApp.myThreadId:
+            self.wMain.reset_cursor()
+            self.current_thread = self.parentApp.myThreadId
+
         self.keypress_timeout = 80
 
         self.update_list()
