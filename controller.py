@@ -2,12 +2,13 @@ import npyscreen
 from utils import *
 from config import *
 
-HELP_TEXT = """
-Navigate with arrow keys, j, k and <tab>. Confirm with enter or space. Go back up with backspace.
+HELP_TEXT = """Navigate with arrow keys, j, k and <tab>. Confirm with enter or space. Go back up with backspace.
 These vim style commands can be issued with : as prefix:
 
-For each post a corresponding directory on the sftp server is created. Files in the directory starting
-with 'postid_' are automatically associated with the matching post.
+
+*How to post files to threads:*
+
+For each post a corresponding directory on the sftp server is created. Files in the directory starting with 'postid_' are automatically associated with the matching post if enabled in the post form.If nessecary files can be deleted via the file browser by selecting the file, pressing DEL and supplying the password that was set with the post. They can not be deleted via sftp.
 
 The file browser is context aware, meaning backspace will open the view the browser was called in.
 
@@ -222,8 +223,7 @@ class ActionController(npyscreen.ActionControllerSimple):
         cursed_notify(HELP_TEXT, title="Help")
 
     def rules(self, *args):
-        placard = RULES_TEXT
-        cursed_notify(placard, title="House Rules")
+        cursed_notify(RULES_TEXT, title="House Rules")
 
     def files(self, *args):
         if not SFTP_INTEGRATION:

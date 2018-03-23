@@ -136,7 +136,7 @@ def update_highlighting(self, start=None, end=None, clear=False):
             color = [normal] * len(value)
 
         # bold
-        p = re.compile("\*[a-zA-Z0-9!+-.,=']+\*")
+        p = re.compile("\*[a-zA-Z0-9!+-.,=': ]+\*")
         for m in p.finditer(value):
             s = m.span()
             for i in range(s[0], s[1]):
@@ -167,7 +167,7 @@ class PagerHighlight(npyscreen.Pager):
 
 class PopupBig(npyscreen.ActionFormMinimal):
     DEFAULT_LINES = 30
-    DEFAULT_COLUMNS = 60
+    DEFAULT_COLUMNS = 70
     SHOW_ATX = 10
     SHOW_ATY = 2
 
