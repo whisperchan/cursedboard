@@ -7,21 +7,12 @@ import npyscreen
 from img2txt import img2txt
 from img2txt import ansi
 
-def generate_img(imgname, maxLen):
-    antialias = True
-    dither = True
-    target_aspect_ratio = .5   # default target_aspect_ratio: 1.0
-
+def generate_img(imgname, maxLen, dither = True, antialiasing = True):
+    bgcolor = None
+    target_aspect_ratio = 0.5   # default target_aspect_ratio: 1.0
 
     try:
-        # add fully opaque alpha value (255)
-        bgcolor = HTMLColorToRGB(bgcolor) + (255, )
-    except:
-        bgcolor = None
-
-
-    try:
-        img = img2txt.load_and_resize_image(imgname, antialias, maxLen, target_aspect_ratio)
+        img = img2txt.load_and_resize_image(imgname, antialiasing, maxLen, target_aspect_ratio)
     except IOError:
         return "File not found: " + imgname
 
@@ -68,14 +59,26 @@ class ImagePager(npyscreen.DummyWidget):
     def __init__(self, *args, **keywords):
         super(ImagePager, self).__init__(*args, **keywords)
         self.start_display_at = 0
+        self.dither = True
+        self.antialiasing = True
+        self.file = None
+
+    def set_file(self, filename):
+        self.file = filename
+        self.render_image()
 
     def update(self, clear=True):
-        print('\033[H')
         curses.def_prog_mode()
         curses.reset_shell_mode()
 
-        
-        for i in range(self.start_display_at, self.start_display_at+min(len(self.values)-self.start_display_at, self.height)):
+        sys.stdout.write('\033[2J')
+        sys.stdout.write('\033[H')
+
+        def bool_map(v):
+            return "On" if v else "Off"
+        sys.stdout.write("[a]ntialiasing: {} [d]ither: {}\n".format(bool_map(self.antialiasing), bool_map(self.dither)))
+
+        for i in range(self.start_display_at, self.start_display_at+min(len(self.values)-self.start_display_at, self.height-2)):
             sys.stdout.write(self.values[i])
             sys.stdout.write("\n")
 
@@ -88,9 +91,14 @@ class ImagePager(npyscreen.DummyWidget):
                     curses.KEY_LEFT:    self.h_scroll_line_up,
                     curses.KEY_DOWN:    self.h_scroll_line_down,
                     curses.KEY_RIGHT:   self.h_scroll_line_down,
+                    'd': self.toggle_dither,
+                    'a': self.toggle_antialiasing,
                 }
 
     def h_scroll_line_up(self, input):
+        if self.start_display_at == 0:
+            return
+
         self.start_display_at = max(self.start_display_at - 1, 0)
         self.update()
         
@@ -100,6 +108,22 @@ class ImagePager(npyscreen.DummyWidget):
             self.start_display_at += 1
             self.update()
 
+    def render_image(self):
+        if not self.file:
+            self.values = ['No file']
+            return
+
+        self.values = generate_img(self.file, self.width, self.dither, self.antialiasing).split("\n")
+
+    def toggle_dither(self, key):
+        self.dither = not self.dither
+        self.render_image()
+        self.update()
+
+    def toggle_antialiasing(self, key):
+        self.antialiasing = not self.antialiasing
+        self.render_image()
+        self.update()
 
 class ImageViewer(npyscreen.FormBaseNew):
     MAIN_WIDGET_CLASS = ImagePager
@@ -108,7 +132,7 @@ class ImageViewer(npyscreen.FormBaseNew):
         super(ImageViewer, self).__init__(*args, **keywords)
 
     def create(self):
-        self.wImage = self.add(self.__class__.MAIN_WIDGET_CLASS, rely=0, relx=0, height=self.lines, width=self.columns )
+        self.wImage = self.add(self.__class__.MAIN_WIDGET_CLASS, rely=0, relx=0, height=self.lines, width=self.columns)
         pass
 
     def beforeEditing(self,):
@@ -118,11 +142,8 @@ class ImageViewer(npyscreen.FormBaseNew):
 
         if not os.path.isfile(self.parentApp.myFile):
             self.parentApp.switchFormPrevious()
-
+        self.wImage.set_file(self.parentApp.myFile)
         self.wImage.start_display_at = 0
-        self.wImage.values = generate_img(self.parentApp.myFile, self.columns).split("\n")
-        return
-
 
     def _print(self):
         pass
