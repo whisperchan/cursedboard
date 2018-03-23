@@ -83,7 +83,7 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
                                   padr(thread['name'], MAX_CHARS_NAME))
             text += "  %s %s\n" % (thread['created'], thread['country'])
 
-            if SFTP_INTEGRATION:
+            if SFTP_INTEGRATION and thread['allows_files']:
                 files = self.get_files_for_post(thread['pid'], thread['tid'])
                 if len(files):
                     for line in blockify(" ".join(files), self.wMain.width, 5):

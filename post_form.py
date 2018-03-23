@@ -1,4 +1,5 @@
 import npyscreen
+import hashlib
 import GeoIP
 
 from config import *
@@ -104,7 +105,7 @@ class PostForm(npyscreen.ActionPopup):
     CANCEL_BUTTON_BR_OFFSET = (2, 73)
     OK_BUTTON_TEXT = "Post!"
     CANCEL_BUTTON_TEXT = "Cancel"
-    DEFAULT_LINES = 31
+    DEFAULT_LINES = 33
     DEFAULT_COLUMNS = 80
 
     def create(self):
@@ -116,6 +117,17 @@ class PostForm(npyscreen.ActionPopup):
         self.wgContent = self.add(BoxedMaxMultiLineEdit, name="Post", max_height=23, contained_widget_arguments={
                                   'max_length': MAX_CHARS_POST, 'max_lines': MAX_LINES_POST})
         self.wgFooter = self.add(npyscreen.FixedText)
+        self.wgFooter.editable = False
+
+        self.wgFiles = self.add(npyscreen.FormControlCheckbox, name="Enable Files", width= 20)
+        self.nextrely -= 1
+        self.nextrelx += 20
+        self.wgPassword = self.add(MaxTitleText, name="PASSWORD:", max_length=MAX_CHARS_TITLE)
+        self.nextrelx -= 20
+        self.wgFiles.addVisibleWhenSelected(self.wgPassword)
+
+
+        self.nextrely += 1
         self.wCancel = self.add(npyscreen.MiniButtonPress,
                                 name="Hide", when_pressed_function=self.on_hide)
 
@@ -148,8 +160,16 @@ class PostForm(npyscreen.ActionPopup):
                 ip = ip.split(" ")[0]
                 country = gi.country_name_by_addr(ip)
 
+        hashphrase = None
+        salt = None
+
+        if self.wgFiles.value:
+            salt = os.urandom(32)
+            hashphrase = hashlib.pbkdf2_hmac('sha256', self.wgPassword.value.encode("utf-8"), salt, 100000)
+ 
+
         threadid = self.parentApp.myDatabase.post(self.parentApp.myBoardId, self.parentApp.myThreadId,
-                                       self.wgName.value, self.wgTitle.value, self.wgContent.value, country) 
+                                       self.wgName.value, self.wgTitle.value, self.wgContent.value, country, hashphrase, salt)
 
         if SFTP_INTEGRATION:
             thread_path = get_local_path(self.parentApp.myDatabase, self.parentApp.myBoardId, threadid)

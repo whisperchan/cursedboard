@@ -21,6 +21,9 @@ def directory_stats(path):
         directories += len(dirnames)
     return files, directories
 
+def is_in_sftp(path):
+    return path[:len(SFTP_ROOT_DIR)] == SFTP_ROOT_DIR
+
 def get_local_path(database, boardid, threadid):
     return os.path.join(SFTP_ROOT_DIR, database.get_board(boardid)[0], str(threadid))
 

@@ -17,7 +17,8 @@ class Database(object):
                         title TEXT, \
                         name TEXT, \
                         content TEXT, \
-                        created DATETIME DEFAULT CURRENT_TIMESTAMP, country TEXT)" % boardid)
+                        created DATETIME DEFAULT CURRENT_TIMESTAMP, country TEXT, \
+                        hash BLOB DEFAULT NULL, salt BLOB DEFAULT NULL)" % boardid)
 
         self.db.commit()
         c.close()
@@ -87,14 +88,18 @@ class Database(object):
     def get_thread(self, boardid, threadid):
         c = self.db.cursor()
         c.row_factory = sqlite3.Row
-        c.execute("SELECT pid, tid, name, title, content, datetime(created,'localtime') as created, country FROM posts_%s WHERE tid = ? ORDER BY created ASC" % (boardid,), (threadid,))
+        c.execute("SELECT pid, tid, name, title, content, datetime(created,'localtime') as created, country, LENGTH(hash) NOT NULL AS allows_files FROM posts_%s WHERE tid = ? ORDER BY created ASC" % (boardid,), (threadid,))
         records = c.fetchall()
         c.close()
         return records
 
-    def post(self, boardid, thread, name, title, content, country):
+    def post(self, boardid, thread, name, title, content, country, hashphrase, salt):
         c = self.db.cursor()
-        c.execute("INSERT INTO posts_%s (name, title, content, country) VALUES (?,?,?,?)" %(boardid), (name, title, content, country))
+        if hashphrase and salt:
+            c.execute("INSERT INTO posts_%s (name, title, content, country, hash, salt) VALUES (?,?,?,?,?,?)" %(boardid), (name, title, content, country, hashphrase, salt))
+        else:
+            c.execute("INSERT INTO posts_%s (name, title, content, country) VALUES (?,?,?,?)" %(boardid), (name, title, content, country))
+
         self.db.commit()
 
         if thread == 0:
@@ -118,3 +123,17 @@ class Database(object):
         self.db.commit()
         c.close()
 
+    def get_hash(self, bid, tid, pid): 
+        c = self.db.cursor()
+        c.row_factory = sqlite3.Row
+        c.execute("SELECT hash, salt FROM posts_%s WHERE tid = ? AND pid = ?" % (bid,), (tid, pid))
+        record = c.fetchone()
+        c.close()
+
+        if not record:
+            return None
+
+        if not record['hash'] or not record['salt']:
+            return None
+
+        return {'hash':record['hash'], 'salt':record['salt']}
