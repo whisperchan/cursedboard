@@ -6,6 +6,7 @@ Ncurse based textboard for ssh.
 - Browse with arrow keys and vim style commands 
 - Sqlite3 backend scaling to the moon and beyond
 - ~~Countryball~~ Countryletter posting
+- File Browser, Image and Text Viewer for the full multimedia experience
 - Fuelled by npyscreen
 
 ### Setup

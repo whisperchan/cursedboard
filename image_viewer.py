@@ -6,13 +6,47 @@ import npyscreen
 
 from img2txt import img2txt
 from img2txt import ansi
+from PIL import Image
 
-def generate_img(imgname, maxLen, dither = True, antialiasing = True):
+def load_and_resize_image(imgname, antialias, columns, rows, aspectRatio = 1.0, fit_height = False):
+    img = Image.open(imgname)
+
+    # force image to RGBA - deals with palettized images (e.g. gif) etc.
+    if img.mode != 'RGBA':
+        img = img.convert('RGBA')
+
+    # need to change the size of the image?
+    # First apply aspect ratio change (if any) - just need to adjust one axis
+    # so we'll do the height.
+
+    native_width, native_height = img.size
+
+    new_width = native_width
+    new_height = native_height
+
+    new_height = int(float(aspectRatio) * native_height)
+
+    rate = float(rows if fit_height else columns)/(new_height if fit_height else new_width)
+    new_width = int(rate * new_width) 
+    new_height = int(rate * new_height)
+
+    # Now isotropically resize up or down (preserving aspect ratio)
+    if fit_height and new_width > columns:
+        rate = float(columns) / new_width
+        new_width = int(rate * new_width)  
+        new_height = int(rate * new_height)
+
+    if native_width != new_width or native_height != new_height:
+        img = img.resize((new_width, new_height), Image.ANTIALIAS if antialias else Image.NEAREST)
+
+    return img
+
+def generate_img(imgname, columns, rows, dither = True, antialiasing = True, fit_height = False):
     bgcolor = None
     target_aspect_ratio = 0.5   # default target_aspect_ratio: 1.0
 
     try:
-        img = img2txt.load_and_resize_image(imgname, antialiasing, maxLen, target_aspect_ratio)
+        img = load_and_resize_image(imgname, antialiasing, columns, rows, target_aspect_ratio, fit_height)
     except IOError:
         return "File not found: " + imgname
 
@@ -62,6 +96,8 @@ class ImagePager(npyscreen.DummyWidget):
         self.dither = True
         self.antialiasing = True
         self.file = None
+        self.fit = True
+        self.height = keywords['height']
 
     def set_file(self, filename):
         self.file = filename
@@ -76,7 +112,7 @@ class ImagePager(npyscreen.DummyWidget):
 
         def bool_map(v):
             return "On" if v else "Off"
-        sys.stdout.write("[a]ntialiasing: {} [d]ither: {}\n".format(bool_map(self.antialiasing), bool_map(self.dither)))
+        sys.stdout.write("[a]ntialiasing: {} [d]ither: {} [f]it horizontal: {}\n".format(bool_map(self.antialiasing), bool_map(self.dither), bool_map(self.fit)))
 
         for i in range(self.start_display_at, self.start_display_at+min(len(self.values)-self.start_display_at, self.height-2)):
             sys.stdout.write(self.values[i])
@@ -93,6 +129,7 @@ class ImagePager(npyscreen.DummyWidget):
                     curses.KEY_RIGHT:   self.h_scroll_line_down,
                     'd': self.toggle_dither,
                     'a': self.toggle_antialiasing,
+                    'f': self.toggle_fit,
                 }
 
     def h_scroll_line_up(self, input):
@@ -113,7 +150,7 @@ class ImagePager(npyscreen.DummyWidget):
             self.values = ['No file']
             return
 
-        self.values = generate_img(self.file, self.width, self.dither, self.antialiasing).split("\n")
+        self.values = generate_img(self.file, self.width, self.height, self.dither, self.antialiasing, self.fit).split("\n")
 
     def toggle_dither(self, key):
         self.dither = not self.dither
@@ -122,6 +159,12 @@ class ImagePager(npyscreen.DummyWidget):
 
     def toggle_antialiasing(self, key):
         self.antialiasing = not self.antialiasing
+        self.render_image()
+        self.update()
+
+    def toggle_fit(self, key):
+        self.fit = not self.fit
+        self.start_display_at = 0
         self.render_image()
         self.update()
 
