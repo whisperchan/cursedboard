@@ -76,7 +76,7 @@ class Frontpage(npyscreen.FormMuttActiveTraditional):
         self.stats_update()
 
     def stats_update(self):
-        self.wStatus2.value = "%s Bits conntected at tick %s " % (
+        self.wStatus2.value = "%s Bits connected at tick %s " % (
             get_connected_users(), datetime.now())
         self.wMain.values = self.parentApp.myDatabase.get_boards()
 
