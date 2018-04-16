@@ -229,6 +229,8 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
             curses.KEY_BACKSPACE: self.action_controller.list,
         })
 
+        self.current_board = 0
+
     def beforeEditing(self):
         board = self.parentApp.myDatabase.get_board(self.parentApp.myBoardId)
         self.wStatus1.value = "/%s/ - %s " % board
@@ -237,6 +239,10 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
             self.parentApp.myBoardId)
         self.parentApp.myThreadTitle = ""
         self.parentApp.myThreadContent = ""
+
+        if self.current_board != self.parentApp.myBoardId:
+            self.wMain.reset_cursor()
+            self.current_board = self.parentApp.myBoardId
 
         self.stats_update()
         self.banner_update()
