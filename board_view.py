@@ -150,10 +150,9 @@ class Board(npyscreen.MultiLineAction):
     def update(self, clear=True):
         # There is a edge case were it start_display_at becomes -1 when
         # posting on an empty board. This is 'solves' that problem
-        self.start_display_at = max(self.start_display_at, 0)
 
-        self.make_contained_widgets()
-        self.reset_display_cache()
+        self.start_display_at = max(self.start_display_at, 0)
+        self.cursor_line = max(self.cursor_line, 0)
 
 
         super(Board, self).update(clear)
