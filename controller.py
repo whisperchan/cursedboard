@@ -5,22 +5,12 @@ from config import *
 HELP_TEXT = """Navigate with arrow keys, j, k and <tab>. Confirm with enter or space. Go back up with backspace.
 These vim style commands can be issued with : as prefix:
 
-
-*How to post files to threads:*
-
-For each post a corresponding directory on the sftp server is created. Files in the directory starting with 'postid_' are automatically associated with the matching post if enabled in the post form.If nessecary files can be deleted via the file browser by selecting the file, pressing DEL and supplying the password that was set with the post. They can not be deleted via sftp.
-
-The file browser is context aware, meaning backspace will open the view the browser was called in.
-
-The sftp server allows files up to 10MB and with the filename set 0-9a-Z_-.
-
 h, help      - This message
 rules        - Show info
 about
 info
 
-p, post      - Open the post form on a board
-r, reply     - Open the reply form on a thread
+p, post      - Open the post form on a board/thread
 b, board     - Go back to a board from thread
 l, list      - Go back to overview
 f, files     - Opens the file browser context aware
@@ -32,6 +22,16 @@ admin
        create     - Create a board
        delete     - Delete a post
        nuke       - Nuke a board
+
+
+*How to post files to threads:*
+
+For each post a corresponding directory on the sftp server is created. Files in the directory starting with 'postid_' are automatically associated with the matching post if enabled in the post form.If nessecary files can be deleted via the file browser by selecting the file, pressing DEL and supplying the password that was set with the post. They can not be deleted via sftp.
+
+The file browser is context aware, meaning backspace will open the view the browser was called in.
+
+The sftp server allows files up to 10MB and with the filename set 0-9a-Z_-.
+
 """
 
 RULES_TEXT = """
@@ -68,8 +68,8 @@ class ActionController(npyscreen.ActionControllerSimple):
             'f': self.files,
             'p': self.post,
             'post': self.post,
-            'r': self.reply,
-            'reply': self.reply,
+            'r': self.post,
+            'reply': self.post,
             'b': self.current_board,
             'board': self.current_board,
             'l': self.list,
@@ -205,19 +205,15 @@ class ActionController(npyscreen.ActionControllerSimple):
         self.parent.parentApp.switchForm("MAIN")
 
     def post(self, *args):
-        if self.parent.parentApp._THISFORM.FORM_NAME != "BOARD":
-            self.parent.wStatus2.value = "Not on a board"
+        if self.parent.parentApp._THISFORM.FORM_NAME == "BOARD":
+            self.parent.parentApp.switchForm("POST")
             return
 
-        self.parent.parentApp.switchForm("POST")
-
-    def reply(self, *args):
-        # can be made context aware
-        if self.parent.parentApp._THISFORM.FORM_NAME != "THREAD":
-            self.parent.wStatus2.value = "Not in a thread"
+        if self.parent.parentApp._THISFORM.FORM_NAME == "THREAD":
+            self.parent.parentApp.switchForm("POST")
             return
 
-        self.parent.parentApp.switchForm("POST")
+        self.parent.wStatus2.value = "Not in a thread/board"
 
     def help(self, *args):
         cursed_notify(HELP_TEXT, title="Help")
