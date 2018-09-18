@@ -46,5 +46,7 @@ if __name__ == "__main__":
         App.run()
     except npyscreen.wgwidget.NotEnoughSpaceForWidget:
         print("Please increase the size of your terminal and reconnect")
+        print("Press any key to close connection")
+        input()
     except KeyboardInterrupt:
         print("Good bye")
