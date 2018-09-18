@@ -10,7 +10,7 @@ rules        - Show info
 about
 info
 
-p, post      - Open the post form on a board/thread
+p, post      - Open the post form on a board/thread optionally with id to reply to
 b, board     - Go back to a board from thread
 l, list      - Go back to overview
 f, files     - Opens the file browser context aware
@@ -205,6 +205,12 @@ class ActionController(npyscreen.ActionControllerSimple):
         self.parent.parentApp.switchForm("MAIN")
 
     def post(self, *args):
+
+        if len(args) > 1 and  re.match("^[0-9]+$",args[1]):
+            self.parent.parentApp.reply_to = int(args[1])
+        else:
+            self.parent.parentApp.reply_to = None
+
         if self.parent.parentApp._THISFORM.FORM_NAME == "BOARD":
             self.parent.parentApp.switchForm("POST")
             return

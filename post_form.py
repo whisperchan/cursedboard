@@ -133,20 +133,31 @@ class PostForm(npyscreen.ActionPopup):
 
     def beforeEditing(self):
         self.wgTitle.value = ""
-        self.wgName.value = ANON_NAME
         self.wgContent.value = ""
+        self.wgName.value = ANON_NAME
+
+
+
         if self.parentApp._FORM_VISIT_LIST[-2] == "THREAD":
+            if self.parentApp.reply_to:
+                self.wgContent.value = ">>"+str(self.parentApp.reply_to)
+                self.parentApp.reply_to = None
+
             self.wgFooter.value = "              Hiding will keep the form content in the thread"
-            self.wgTitle.value = self.parentApp.myThreadTitle
-            self.wgContent.value = self.parentApp.myThreadContent
+
+            if self.parentApp.myThreadTitle:
+                self.wgTitle.value = self.parentApp.myThreadTitle
+
+            if self.parentApp.myThreadContent:
+                self.wgContent.value = self.parentApp.myThreadContent
 
     def on_ok(self):
         if len(self.wgContent.value) < MIN_CHARS_POST:
             npyscreen.notify_wait("Not enough Content", title='You failed')
             return
 
-        self.parentApp.myThreadTitle = ""
-        self.parentApp.myThreadContent = ""
+        self.parentApp.myThreadTitle = None
+        self.parentApp.myThreadContent = None
 
         country = ""
         if self.parentApp.authenticated():
@@ -179,8 +190,8 @@ class PostForm(npyscreen.ActionPopup):
         self.parentApp.switchFormPrevious()
 
     def on_cancel(self):
-        self.parentApp.myThreadTitle = ""
-        self.parentApp.myThreadContent = ""
+        self.parentApp.myThreadTitle = None
+        self.parentApp.myThreadContent = None
         self.parentApp.switchFormPrevious()
 
     def on_hide(self):
@@ -188,7 +199,7 @@ class PostForm(npyscreen.ActionPopup):
             self.parentApp.myThreadTitle = self.wgTitle.value
             self.parentApp.myThreadContent = self.wgContent.value
         else:
-            self.parentApp.myThreadTitle = ""
-            self.parentApp.myThreadContent = ""
+            self.parentApp.myThreadTitle = None
+            self.parentApp.myThreadContent = None
 
         self.parentApp.switchFormPrevious()
