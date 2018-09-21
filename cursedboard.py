@@ -20,6 +20,7 @@ class TestApp(npyscreen.NPSAppManaged):
         self.myThreadTitle = ""
         self.myThreadContent = ""
         self.myPath = ""
+        self.jump_to_bottom = False
         self.addForm("MAIN", Frontpage)
         self.addForm("BOARD", BoardView)
         self.addForm("POST", PostForm)

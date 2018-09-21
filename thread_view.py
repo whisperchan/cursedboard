@@ -61,6 +61,9 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
             curses.KEY_BACKSPACE: self.action_controller.current_board,
         })
 
+        if self.parentApp.jump_to_bottom:
+            self.wMain.h_show_end(None)
+
     def stats_update(self):
         self.wStatus2.value = "%s Bits connected at tick %s " % (
             get_connected_users(), datetime.now())

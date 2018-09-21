@@ -12,6 +12,7 @@ info
 
 p, post      - Open the post form on a board/thread optionally with id to reply to
 b, board     - Go back to a board from thread
+j, jump      - Toggle "Jump to Bottom" for reading threads
 l, list      - Go back to overview
 f, files     - Opens the file browser context aware
 q, quit      - Jack out
@@ -74,6 +75,8 @@ class ActionController(npyscreen.ActionControllerSimple):
             'board': self.current_board,
             'l': self.list,
             'list': self.list,
+            'j': self.toggle_jump_to_bottom,
+            'jump': self.toggle_jump_to_bottom,
             'q': self.quit,
             'quit': self.quit,
             'admin': self.admin,
@@ -252,4 +255,9 @@ class ActionController(npyscreen.ActionControllerSimple):
 
         placard = "sftp {}:{}".format(HOSTNAME, get_remote_path(self.parent.parentApp.myDatabase, self.parent.parentApp.myBoardId, self.parent.parentApp.myThreadId))
         cursed_notify(placard, title="Upload to Thread")
+
+    def toggle_jump_to_bottom(self, *args):
+        self.parent.parentApp.jump_to_bottom = not self.parent.parentApp.jump_to_bottom
+        self.parent.wStatus2.value = "Jump to bottom: "+str(self.parent.parentApp.jump_to_bottom)
+
 
