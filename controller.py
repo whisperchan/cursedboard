@@ -259,5 +259,7 @@ class ActionController(npyscreen.ActionControllerSimple):
     def toggle_jump_to_bottom(self, *args):
         self.parent.parentApp.jump_to_bottom = not self.parent.parentApp.jump_to_bottom
         self.parent.wStatus2.value = "Jump to bottom: "+str(self.parent.parentApp.jump_to_bottom)
+        if self.parent.parentApp._THISFORM.FORM_NAME == "THREAD" and self.parent.parentApp.jump_to_bottom:
+            self.parent.parentApp.getForm("THREAD").jump_to_bottom()
 
 

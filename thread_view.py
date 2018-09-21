@@ -119,3 +119,5 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
 
         files = os.listdir(thread_path)
         return [name for name in files if re.match("{}_.*".format(pid), name)] 
+    def jump_to_bottom(self):
+        self.wMain.h_show_end(None)
