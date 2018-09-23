@@ -105,11 +105,17 @@ class PostForm(npyscreen.ActionPopup):
     CANCEL_BUTTON_BR_OFFSET = (2, 73)
     OK_BUTTON_TEXT = "Post!"
     CANCEL_BUTTON_TEXT = "Cancel"
-    DEFAULT_LINES = 33
+    DEFAULT_LINES = 34
     DEFAULT_COLUMNS = 80
 
     def create(self):
         self.value = None
+        self.wgHeadline = self.add(npyscreen.FixedText, max_height=1)
+        self.wgHeadline.editable = False
+        self.wgHeadline.syntax_highlighting = True
+        self.wgHeadline._highlightingdata = [curses.A_BOLD | self.theme_manager.findPair(self, 'DANGER')]*80
+
+
         self.wgTitle = self.add(
             MaxTitleText, name="Title:", max_length=MAX_CHARS_TITLE)
         self.wgName = self.add(MaxTitleText, name="Name:",
@@ -128,28 +134,32 @@ class PostForm(npyscreen.ActionPopup):
 
 
         self.nextrely += 1
-        self.wCancel = self.add(npyscreen.MiniButtonPress,
+        self.wgCancel = self.add(npyscreen.MiniButtonPress,
                                 name="Hide", when_pressed_function=self.on_hide)
 
     def beforeEditing(self):
         self.wgTitle.value = ""
         self.wgContent.value = ""
         self.wgName.value = ANON_NAME
-
-
+        self.wgFooter.value = ""
+        self.wgHeadline.value = "                              Create Thread"
+        self.wgCancel.hidden = True
 
         if self.parentApp._FORM_VISIT_LIST[-2] == "THREAD":
+            self.wgHeadline.value = "                                 Post Reply"
+            self.wgFooter.value = "              Hiding will keep the form content in the thread"
+            self.wgCancel.hidden = False
+
             if self.parentApp.reply_to:
                 self.wgContent.value = ">>"+str(self.parentApp.reply_to)
                 self.parentApp.reply_to = None
-
-            self.wgFooter.value = "              Hiding will keep the form content in the thread"
 
             if self.parentApp.myThreadTitle:
                 self.wgTitle.value = self.parentApp.myThreadTitle
 
             if self.parentApp.myThreadContent:
                 self.wgContent.value = self.parentApp.myThreadContent
+
 
     def on_ok(self):
         if len(self.wgContent.value) < MIN_CHARS_POST:
