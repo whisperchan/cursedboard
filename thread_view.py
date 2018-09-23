@@ -9,6 +9,7 @@ import random
 from datetime import datetime
 
 import npyscreen
+import session
 
 from config import *
 from utils import *
@@ -61,7 +62,7 @@ class ThreadView(npyscreen.FormMuttActiveTraditional):
             curses.KEY_BACKSPACE: self.action_controller.current_board,
         })
 
-        if self.parentApp.jump_to_bottom:
+        if session.jump_to_bottom:
             self.wMain.h_show_end(None)
 
     def stats_update(self):

@@ -7,7 +7,20 @@ Ncurse based textboard for ssh.
 - Sqlite3 backend scaling to the moon and beyond
 - ~~Countryball~~ Countryletter posting
 - File Browser, Image and Text Viewer for the full multimedia experience
+- Customize your experience automatically via ssh\_config
 - Fuelled by npyscreen
+
+### User settings with ~/ssh\_config
+
+```
+   Match User bit Host whisper.onthewifi.com
+       RemoteCommand jump_to_bottom=True
+       RequestTTY force
+```
+
+Currently available settings:
+- jump\_to\_bottom Automaticall scroll to bottom of thread
+
 
 ### Setup
 Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages provided by your distribution 

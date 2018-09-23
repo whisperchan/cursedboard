@@ -1,4 +1,5 @@
 import npyscreen 
+import session
 from utils import *
 from config import *
 
@@ -15,6 +16,7 @@ b, board     - Go back to a board from thread
 j, jump      - Toggle "Jump to Bottom" for reading threads
 l, list      - Go back to overview
 f, files     - Opens the file browser context aware
+s, session   - Show sessions settings, can be used with RemoteCommand and RequestTTY set to force to automatically rice your experience 
 q, quit      - Jack out
 
 
@@ -77,6 +79,8 @@ class ActionController(npyscreen.ActionControllerSimple):
             'list': self.list,
             'j': self.toggle_jump_to_bottom,
             'jump': self.toggle_jump_to_bottom,
+            's': self.show_session,
+            'session': self.show_session,
             'q': self.quit,
             'quit': self.quit,
             'admin': self.admin,
@@ -257,9 +261,11 @@ class ActionController(npyscreen.ActionControllerSimple):
         cursed_notify(placard, title="Upload to Thread")
 
     def toggle_jump_to_bottom(self, *args):
-        self.parent.parentApp.jump_to_bottom = not self.parent.parentApp.jump_to_bottom
-        self.parent.wStatus2.value = "Jump to bottom: "+str(self.parent.parentApp.jump_to_bottom)
-        if self.parent.parentApp._THISFORM.FORM_NAME == "THREAD" and self.parent.parentApp.jump_to_bottom:
+        session.jump_to_bottom = not session.jump_to_bottom
+        self.parent.wStatus2.value = "Jump to bottom: "+str(session.jump_to_bottom)
+        if self.parent.parentApp._THISFORM.FORM_NAME == "THREAD" and session.jump_to_bottom:
             self.parent.parentApp.getForm("THREAD").jump_to_bottom()
 
+    def show_session(self, *args):
+        cursed_notify(session.to_string(), title="Session Cookie")
 
