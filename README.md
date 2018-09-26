@@ -22,6 +22,22 @@ Currently available settings:
 - jump\_to\_bottom Automaticall scroll to bottom of thread
 
 
+### SFTP Integration
+
+Cursedboard brings his own custom configured sftp server to allow uploading files. 
+
+1. Create /var/sftp/ and copy sftp-server.pl and make it executable. 
+2. Install libnet-sftp-sftpserver-perl and libbsd-resource-perl
+2. Assuming the user 'chan' write in your config.py
+```
+SFTP_INTEGRATION = True
+SFTP_ROOT_DIR = "/var/sftp/files/chan/"
+
+```
+3. Adjust the paths in selector.sh to your locations
+4. Point your users 'chan' /etc/passwd entry to selector.sh. 
+
+
 ### Setup
 Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages provided by your distribution 
 
