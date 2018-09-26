@@ -25,12 +25,13 @@ Currently available settings:
 ### Setup
 Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages provided by your distribution 
 
-1. Install dependencies
-2. Change motd.py to your likening 
-3. Create a dedicated unix user
-4. Copy config.py-sample to config.py and adjust settings
-5. Touch .hushlogin in the user directory to avoid an IP leak
-6. Disable TCP Forwarding for the user in sshd\_config 
-7. Disable the sftp Subsystem or make sure its not set to internal-sftp in sshd\_config
-8. ???
-9. Comfy Posting 
+1. Run git submodule init and git submodule update to get img2txt
+2. Install dependencies
+3. Change motd.py to your likening 
+4. Create a dedicated unix user
+5. Copy config.py-sample to config.py and adjust settings
+6. Touch .hushlogin in the user directory to avoid an IP leak
+7. Disable TCP Forwarding for the user in sshd\_config 
+8. Disable the sftp Subsystem or make sure its not set to internal-sftp in sshd\_config
+9. ???
+10. Comfy Posting 

@@ -1,4 +1,3 @@
 npyscreen
 GeoIP
 python-magic
-img2txt.py
