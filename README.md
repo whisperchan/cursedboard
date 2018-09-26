@@ -22,9 +22,10 @@ Currently available settings:
 - jump\_to\_bottom Automaticall scroll to bottom of thread
 
 
-### SFTP Integration
+This config is incompatible with sftp. To connect with sftp use '-F /dev/null'
 
-Cursedboard brings his own custom configured sftp server to allow uploading files. 
+### SFTP Integration
+Cursedboard brings its own custom configured sftp server to allow uploading files. 
 
 1. Create /var/sftp/ and copy sftp-server.pl and make it executable. 
 2. Install libnet-sftp-sftpserver-perl and libbsd-resource-perl
