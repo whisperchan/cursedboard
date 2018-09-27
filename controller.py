@@ -25,6 +25,7 @@ admin
        create     - Create a board
        delete     - Delete a post
        nuke       - Nuke a board
+       deauth     - Return to the lesser beings
 
 
 *How to post files to threads:*
@@ -90,6 +91,7 @@ class ActionController(npyscreen.ActionControllerSimple):
             'info': self.rules,
             'about': self.rules,
             'auth': self.auth,
+            'deauth': self.deauth,
         }
 
         self.ADMIN = {
@@ -156,6 +158,11 @@ class ActionController(npyscreen.ActionControllerSimple):
             self.parent.wStatus2.value = "God Mode enabled"
         else:
             self.parent.wStatus2.value = "Denied"
+
+    def deauth(self, *args):
+        if self.parent.parentApp.authenticated():
+            self.parent.parentApp.deauthenticate()
+            self.parent.wStatus2.value = "God Mode disabled"
 
     def create_board(self, *args):
         if args is None or len(args) < 3:

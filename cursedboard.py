@@ -33,6 +33,10 @@ class TestApp(npyscreen.NPSAppManaged):
         # Disable mouse, easier copy / paste
         curses.mousemask(0)
 
+    def deauthenticate(self):
+        self.admin = False
+
+
     def authenticate(self, pw):
         self.admin = False
         if pw == PASSWORD:
