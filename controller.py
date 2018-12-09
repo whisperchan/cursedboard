@@ -176,7 +176,7 @@ class ActionController(npyscreen.ActionControllerSimple):
             return
 
         country_balls = option_binary(args[1])
-        if not country_balls:
+        if country_balls == None:
             self.parent.wStatus2.value = "Countryball Value: Off off 0 On on 1"
             return
 

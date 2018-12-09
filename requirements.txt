@@ -1,3 +1,5 @@
 npyscreen
 GeoIP
 python-magic
+docopt
+ansi

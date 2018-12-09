@@ -107,7 +107,13 @@ class TextViewer(npyscreen.FormMuttActiveTraditional):
             self.parentApp.switchFormPrevious()
 
         with open(self.value,'r') as content:
-            self.wMain.values = content.readlines()
+            wrapped_lines = []
+            for line in content.readlines():
+                 if line == "\n":
+                     wrapped_lines.append("")
+                 wrapped_lines.extend(textwrap.wrap(line, self.wMain.width-8))
+
+            self.wMain.values = wrapped_lines
 
 class FileGrid(npyscreen.SimpleGrid):
     default_column_number = 1
@@ -150,7 +156,7 @@ class FileGrid(npyscreen.SimpleGrid):
             self.change_dir(select_file)
         else:
             mime = magic.from_file(select_file, mime=True)
-            if mime == "text/plain":
+            if mime[:5] == "text/":
                 self.parent.parentApp.myFile = select_file
                 self.parent.parentApp.switchForm("TEXTVIEWER")
             elif mime == 'image/png' or mime == "image/jpeg":

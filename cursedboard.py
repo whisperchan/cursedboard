@@ -3,6 +3,7 @@ import npyscreen
 import session
 import curses
 import sys
+import os
 
 from config import *
 from database import Database
@@ -12,6 +13,7 @@ from board_view import BoardView
 from post_form import PostForm
 from file_browser import FileBrowser, TextViewer, DeleteFileForm
 from image_viewer import ImageViewer
+
 
 class TestApp(npyscreen.NPSAppManaged):
     def onStart(self):
