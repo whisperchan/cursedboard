@@ -4,6 +4,7 @@ import time
 import re
 import npyscreen
 
+
 MOTD = """
 =================.,=====================.,=====================.,=====================.,=====================.
 |||||||||||||||| || ||||||||||||||||||| || ||||||||||||||||||| || ||||||||||||||||||| || ||||||||||||||||||| |
@@ -20,17 +21,17 @@ MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MM
 ----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.|
 MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
 ----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.|
-MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM || 
+MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
 ----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.|
-MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||   X  
-----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.| .'o'. 
-MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM || .o.'.
-----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------. .'.'o'.
-MMMM  O  :h for |||| help    O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |o'.o.'.o.
-----------------'||`-------------------'||`-------------------'||`-------------------'||`-------------------.'.o.'.'.o.
-=============I===´`=====================´`=====================´`=====================´`===================.o.'.o.'.o.'.
-             |                                                                                                [_____]
-             |           we're the bits that quitely exchange in the bustling flow around the globe            \___/   
+MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
+----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.|
+MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
+----------------.||.-------------------.||.-------------------.||.-------------------.||.-------------------.|
+MMMM  O  :h for |||| help    O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
+----------------'||`-------------------'||`-------------------'||`-------------------'||`-------------------'|
+=============I===´`=====================´`=====================´`=====================´`=====================´
+             |
+             |           we're the bits that quitely exchange in the bustling flow around the globe
 ~~~~~~~~~~~~~´             NEWS: sftp bit@whisper.onthewifi.com 10MB Limit simple ASCII filenames
 """
 
@@ -57,7 +58,6 @@ class MotdTextfield(npyscreen.Textfield):
         green = self.parent.theme_manager.findPair(self, 'SAFE')
         blue = self.parent.theme_manager.findPair(self, 'NO_EDIT')
         red = self.parent.theme_manager.findPair(self, 'DANGER')
-
 
         color = [normal]*len(value)
 
@@ -137,37 +137,6 @@ class MotdTextfield(npyscreen.Textfield):
             position = group.span()
             for i in range(position[0], position[1]):
                 color[i] = flir
-
-
-	## Chrismas Time
-        regex = re.compile("X")
-        for group in regex.finditer(value):
-            position = group.span()
-            for i in range(position[0], position[1]):
-                color[i] = yellow | curses.A_BOLD
-
-        regex = re.compile("(o'|o\.)")
-        for group in regex.finditer(value):
-            position = group.span()
-            color[position[0]] = red 
-
-        regex = re.compile("(\.'|'\.)")
-        for group in regex.finditer(value):
-            position = group.span()
-            for i in range(position[0], position[1]):
-            	color[i] = green 
-
-        regex = re.compile("'\.")
-        for group in regex.finditer(value):
-            color[group.span()[0]+1] = green 
-
-        regex = re.compile("\.o")
-        for group in regex.finditer(value):
-            color[group.span()[0]] = green 
-
-        regex = re.compile("o\.")
-        for group in regex.finditer(value):
-            color[group.span()[0]+1] = green 
 
         self._highlightingdata = color
 
