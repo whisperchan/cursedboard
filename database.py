@@ -1,8 +1,9 @@
 import sqlite3
+import os
 
 class Database(object):
     def __init__(self, filename="cursedboard.db"):
-        self.dbfilename = filename
+        self.dbfilename = os.path.abspath(filename)
         self.db = sqlite3.connect(self.dbfilename)
         c = self.db.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS boards (bid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, description TEXT, country_balls INT)")

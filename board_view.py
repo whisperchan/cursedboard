@@ -254,10 +254,21 @@ class BoardView(npyscreen.FormMuttActiveTraditional):
     def get_banner(self):
         base_dir = os.path.dirname(os.path.realpath(__file__))
         banners = glob.glob(base_dir+"/banners/default-*.banner")
-        banners += glob.glob(base_dir+"/banners/%s-*.banner" %(self.parentApp.myBoardId))
+        banners += glob.glob(base_dir+"/banners/%s-*.banner" % self.parentApp.myBoardId)
 
-        return open(random.choice(banners), "r").readlines()
-     
+        # handle some terminals not supporting unicode (@Windows)
+        # thus, mark banners containing unicode chars by including -unicode- in the name
+        # mark banners containing only ascii with -ascii- in the name, files with no marking
+        # will be assumed to be ascii
+        unicode_banners = [a for a in banners if "-unicode-" in a]
+        ascii_banners = set([a for a in banners if a not in unicode_banners])
+        ascii_banners = ascii_banners.union(set([a for a in banners if "-ascii-" in a]))
+        ascii_banners = list(ascii_banners)
+        try:
+            return open(random.choice(unicode_banners), encoding="utf-8").readlines()
+        # This *might* be the wrong exception, but eh
+        except UnicodeDecodeError:
+            return open(random.choice(ascii_banners), "r").readlines()
 
     def banner_update(self): 
         banner = self.get_banner()

@@ -1,6 +1,6 @@
 import npyscreen
 import hashlib
-import GeoIP
+import pygeoip
 
 from config import *
 from utils import *
@@ -173,7 +173,7 @@ class PostForm(npyscreen.ActionPopup):
         if self.parentApp.authenticated():
             country = "##BOT##"
         elif self.parentApp.myDatabase.board_has_country_balls(self.parentApp.myBoardId):
-            gi = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
+            gi = pygeoip.new(pygeoip.GEOIP_MEMORY_CACHE)
             ip = os.getenv("SSH_CLIENT")
             if not ip:
                 country = "Onion"

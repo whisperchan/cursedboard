@@ -10,6 +10,7 @@ import subprocess
 
 import npyscreen
 
+import config
 from config import *
 
 
@@ -53,6 +54,8 @@ def padl(string, size):
 
 
 def get_connected_users():
+    if config.STANDALONE:
+        return 0
     p = subprocess.Popen(["w", UNIX_USER, "-s"], stdout=subprocess.PIPE)
     out = p.communicate()[0]
     if out is None:

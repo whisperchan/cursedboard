@@ -2,9 +2,8 @@ import sys
 import os
 import curses
 import npyscreen
+import img2txt
 
-
-from img2txt import img2txt
 from img2txt import ansi
 from PIL import Image
 

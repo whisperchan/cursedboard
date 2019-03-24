@@ -1,5 +1,6 @@
 npyscreen
-GeoIP
 python-magic
 docopt
 ansi
+pygeoip
+img2txt

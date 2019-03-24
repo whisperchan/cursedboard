@@ -3,7 +3,7 @@ import npyscreen
 import session
 import curses
 import sys
-import os
+import config
 
 from config import *
 from database import Database
@@ -28,7 +28,8 @@ class TestApp(npyscreen.NPSAppManaged):
         self.addForm("BOARD", BoardView)
         self.addForm("POST", PostForm)
         self.addForm("THREAD", ThreadView)
-        self.addForm("FILES", FileBrowser)
+        if config.SFTP_INTEGRATION:
+            self.addForm("FILES", FileBrowser)
         self.addForm("TEXTVIEWER", TextViewer)
         self.addForm("IMGVIEWER", ImageViewer)
         self.addForm("DELETEFILE", DeleteFileForm)
