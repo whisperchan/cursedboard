@@ -5,7 +5,6 @@ import curses
 import sys
 import config
 
-from config import *
 from database import Database
 from thread_view import ThreadView
 from frontpage import Frontpage
@@ -18,7 +17,7 @@ from image_viewer import ImageViewer
 class TestApp(npyscreen.NPSAppManaged):
     def onStart(self):
         self.admin = False
-        self.myDatabase = Database(filename=DATABASE_FILE)
+        self.myDatabase = Database(filename=config.DATABASE_FILE)
         self.myBoardId = 0
         self.myThreadId = 0
         self.myThreadTitle = ""
@@ -30,9 +29,9 @@ class TestApp(npyscreen.NPSAppManaged):
         self.addForm("THREAD", ThreadView)
         if config.SFTP_INTEGRATION:
             self.addForm("FILES", FileBrowser)
-        self.addForm("TEXTVIEWER", TextViewer)
-        self.addForm("IMGVIEWER", ImageViewer)
-        self.addForm("DELETEFILE", DeleteFileForm)
+            self.addForm("TEXTVIEWER", TextViewer)
+            self.addForm("IMGVIEWER", ImageViewer)
+            self.addForm("DELETEFILE", DeleteFileForm)
         # Disable mouse, easier copy / paste
         curses.mousemask(0)
 
