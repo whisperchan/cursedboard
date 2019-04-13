@@ -30,8 +30,8 @@ MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MM
 MMMM  O  :h for |||| help    O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
 ----------------'||`-------------------'||`-------------------'||`-------------------'||`-------------------'|
 =============I===´`=====================´`=====================´`=====================´`=====================´
-             |
              |           we're the bits that quitely exchange in the bustling flow around the globe
+             |                 2okzlsboulbv6y22foslk7cvgi3nqzj2a7tsofhkzvh6jytjcoxlqlad.onion
 ~~~~~~~~~~~~~´             NEWS: sftp bit@whisper.onthewifi.com 10MB Limit simple ASCII filenames
 """
 
@@ -67,11 +67,11 @@ class MotdTextfield(npyscreen.Textfield):
                 color[line_state] = blue
                 line_state = (line_state + 1) % 18
         elif line_state == 14:
-            if value.find("             |        we") > -1:
+            if value.find("             |                 2") > -1:
                 color[13] = blue
                 line_state = (line_state + 1) % 18
         elif line_state == 15:
-            if value == "             |":
+            if value.find("             |           w") > -1:
                 color[13] = blue
                 line_state = (line_state + 1) % 18
         elif line_state == 16:
