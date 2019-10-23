@@ -30,9 +30,9 @@ MMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MM
 MMMM  O  :h for |||| help    O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM |||| MMMMMM  O  MMMMMM ||
 ----------------'||`-------------------'||`-------------------'||`-------------------'||`-------------------'|
 =============I===´`=====================´`=====================´`=====================´`=====================´
-             |           we're the bits that quitely exchange in the bustling flow around the globe
+             |           we're the bits that quietly exchange in the bustling flow around the globe
              |                 2okzlsboulbv6y22foslk7cvgi3nqzj2a7tsofhkzvh6jytjcoxlqlad.onion
-~~~~~~~~~~~~~´             NEWS: sftp bit@whisper.onthewifi.com 10MB Limit simple ASCII filenames
+~~~~~~~~~~~~~´        NEWS: sftp bit@whisper.onthewifi.com 10MB file size limit, simple ASCII filenames
 """
 
 line_state = 0
