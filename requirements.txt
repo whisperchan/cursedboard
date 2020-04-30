@@ -2,5 +2,4 @@ npyscreen
 python-magic
 docopt
 ansi
-pygeoip
 img2txt
