@@ -1,3 +1,4 @@
+import maxminddb
 import npyscreen
 import hashlib
 
@@ -172,8 +173,13 @@ class PostForm(npyscreen.ActionPopup):
         if self.parentApp.authenticated():
             country = "##BOT##"
         elif self.parentApp.myDatabase.board_has_country_balls(self.parentApp.myBoardId):
-            #Country lookup broken
-            pass
+            ip = os.getenv("SSH_CLIENT")
+            if not ip:
+                country = "Onion"
+            else:
+                ip = ip.split(" ")[0]
+                r = maxminddb.open_database(MAXMIND_DATABASE)
+                country = r.get(ip)['registered_country']['names']['en']
 
         hashphrase = None
         salt = None

@@ -41,7 +41,7 @@ class TestApp(npyscreen.NPSAppManaged):
 
     def authenticate(self, pw):
         self.admin = False
-        if pw == PASSWORD:
+        if pw == config.PASSWORD:
             self.admin = True
 
     def authenticated(self):

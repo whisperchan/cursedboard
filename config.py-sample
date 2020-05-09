@@ -13,3 +13,4 @@ HOSTNAME = "example.net"
 STANDALONE = False
 SFTP_INTEGRATION = False
 SFTP_ROOT_DIR = "/var/sftp"
+MAXMIND_DATABASE = "GeoLite2-Country.mmdb"

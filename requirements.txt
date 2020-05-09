@@ -2,4 +2,3 @@ npyscreen
 python-magic
 docopt
 ansi
-img2txt

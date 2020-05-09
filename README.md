@@ -39,8 +39,14 @@ SFTP_ROOT_DIR = "/var/sftp/files/chan/"
 4. Point your users 'chan' /etc/passwd entry to selector.sh. 
 
 
+
+### Countryballs
+
+A GeoLite IP Database needs to be supplied via the MAXMIND\_DATABASE config key, otherwise
+it can be left empty. 
+
 ### Setup
-Needs python3, npyscreen and GeoIP. Use pip3 install -r requirements or packages provided by your distribution 
+Needs python3, npyscreen and maxminddb. Use pip3 install -r requirements.txt or packages provided by your distribution 
 
 1. Run git submodule init and git submodule update to get img2txt
 2. Install dependencies
