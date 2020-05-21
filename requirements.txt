@@ -2,3 +2,4 @@ npyscreen
 python-magic
 docopt
 ansi
+maxminddb
