@@ -84,6 +84,8 @@ class Database(object):
             record['last'] = c.fetchone()
             result.append(record)
 
+        result.sort(key=lambda x: x['last']['created'], reverse=True)
+
         return result
 
     def get_thread(self, boardid, threadid):
